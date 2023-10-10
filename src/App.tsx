@@ -2,11 +2,17 @@ import React from 'react'
 import './App.css'
 import Button from './commons/Button';
 import InputField from './commons/InputField';
+import { NotificationConfig, notifyMessage } from './commons/notifyMessage';
 
 function App() {
-
+  const config: NotificationConfig = {
+    closeIcon: true,
+    duration: 10,
+    placement: 'bottom-right',
+    type: 'error'
+  }
   return <div className={"w-3/6 mx-auto border my-2 border-black p-4"}>
-    <InputField label={"Default field"} onChange={(e) => alert(`value - ${e.target.value}`)} />
+    {/* <InputField label={"Default field"} onChange={(e) => alert(`value - ${e.target.value}`)} />
     <InputField
       label={<>
         <span className={"italic"}>Custom Label</span>
@@ -26,7 +32,6 @@ function App() {
       <Button variant='secondary' size='small'>Secondary</Button>
     </div>
 
-    {/*I am not giving size here as default size is medium*/}
     <div className="mb-4 flex gap-2 flex-wrap">
       <Button variant='success'>Success</Button>
       <Button variant='error'>Error</Button>
@@ -49,7 +54,6 @@ function App() {
       <Button variant='primary' size='small' isOutline>Primary</Button>
     </div>
 
-    {/*I am not giving size here as default size is medium*/}
     <div className="mb-4 flex gap-2 flex-wrap">
       <Button variant='success' isOutline>Success</Button>
       <Button variant='error' isOutline>Error</Button>
@@ -61,6 +65,10 @@ function App() {
       <Button variant='error' size='large' isOutline>Error</Button>
       <Button variant='warning' size='large' isOutline>Warning</Button>
       <Button variant='primary' size='large' isOutline>Primary</Button>
+    </div> */}
+    <div>
+    <Button variant='success' size='large' 
+    onClick={() => notifyMessage("Hello, this is a message for Pramod for the success of the component", config)}>Success</Button>
     </div>
   </div>
 }
