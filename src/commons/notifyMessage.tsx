@@ -1,34 +1,62 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { createRoot } from "react-dom/client";
 
 export interface NotificationConfig {
-    type?: 'success' | 'error' | 'info' | 'warning',
+    type?: 'success' | 'error' | 'info' | 'warning' | 'default',
     closeIcon?: boolean,
     duration?: number,
+    autoClose?: boolean,
+    title?: string,
     placement?: 'top-left' | 'top-center' | 'top-right' | 'center'
     | 'bottom-left' | 'bottom-center' | 'bottom-right'
 }
-export const notifyMessage = (message: string, config: NotificationConfig) => {
-    const el = document.createElement('div');
-    el.setAttribute("id", 'notification');
-    document.getElementById("root")?.append(el);
-    createRoot(el).render(<Notification message={message} config={config} />);
-    if (config?.duration) {
+export const notifyMessage = (message: string, config?: NotificationConfig) => {
+    const placement = config?.placement ?? 'top-right';
+    const autoClose = config?.autoClose ?? true;
+    let notificationContainer = document.getElementById(`notification_${placement}`);
+
+    if (!notificationContainer) {
+        notificationContainer = document.createElement('div');
+        notificationContainer.setAttribute("id", `notification_${placement}`);
+        notificationContainer.setAttribute("class", `absolute p-4 
+        ${placementClassMap[placement].join(" ")}`)
+        document.body?.append(notificationContainer);
+    }
+    // Create notification Element
+    let notificationEl = document.createElement("div");
+    const notificationId = `notification_${placement}_${notificationContainer?.childElementCount}`;
+    notificationEl.setAttribute("id", notificationId)
+
+    notificationContainer.appendChild(notificationEl);
+
+    createRoot(notificationEl).render(
+        <Notification message={message}
+            config={config} notificationId={notificationId} autoClose={autoClose}/>);
+    if (autoClose) {
         setTimeout(() => {
-            removeNotification();
-        }, config?.duration * 1000);
+            removeNotification(placement, notificationId);
+        }, (config?.duration ?? 5) * 1000);
     }
 }
 
-const removeNotification = () => {
-    const el = document.getElementById('notification');
-    if (el) {
+const removeNotification = (placement: string, notificationId: string) => {
+    const notifyEl = document.getElementById(notificationId);
+    if (notifyEl) {
+        notifyEl.classList.add('slide-out-right');
+        setTimeout(() => notifyEl.remove(), 1000);
+    }
+    const el = document.getElementById(`notification_${placement}`);
+    if (el?.childElementCount === 0) {
         el.remove();
     }
 }
 
 const typeColorMap = {
-    success: 'bg-green-800', error: 'bg-red-700', info: 'bg-blue-500', warning: 'bg-orange-600'
+    success: { color: 'bg-green-800', progressBar: 'bg-green-900' },
+    error: { color: 'bg-red-700', progressBar: 'bg-red-800' },
+    info: { color: 'bg-blue-500', progressBar: 'bg-blue-700' },
+    warning: { color: 'bg-orange-600', progressBar: 'bg-orange-700' },
+    default: { color: 'bg-black', progressBar: 'bg-gray-600' },
 }
 
 const placementClassMap = {
@@ -41,22 +69,54 @@ const placementClassMap = {
     'bottom-right': ['bottom-0', 'right-0'],
 }
 
-const Notification: React.FC<{ message: string, config: NotificationConfig }> = ({ message, config }) => {
-    const getStyleClasses = () => {
-        const classNames = ['text-white', 'w-80', 'h-fit', 'shadow-2xl'];
-        classNames.push(typeColorMap[config?.type ?? 'info']);
-        return Array.from(new Set(classNames)).join(" ")
-    }
-    return (
-        <div className={`absolute p-4
-        ${placementClassMap[config?.placement ?? 'top-right'].join(" ")}`}>
+const Notification: React.FC<{ message: string, config?: NotificationConfig, 
+    notificationId: string, autoClose: boolean }>
+    = ({ message, config, notificationId, autoClose }) => {
+        const [progressWidth, setProgressWidth] = useState(0);
+        const [duration, setDuration] = useState(0);
+        const type = config?.type ?? 'default';
+        const title = config?.title ?? '';
+        useEffect(() => {
+            setDuration(config?.duration ? config?.duration * 1000 : 5000);
+        }, []);
+
+        useEffect(() => {
+            if (duration > 0) {
+                let width = 0;
+                const interval = setInterval(() => {
+                    setProgressWidth(++width);
+                    if (width >= 100) {
+                        clearInterval(interval);
+                    }
+                }, duration / 100);
+            }
+        }, [duration]);
+
+
+        const getStyleClasses = () => {
+            const classNames = [, 
+                'rounded-xl', 'm-3', 'text-white', 'w-80', 'h-fit', 'shadow-2xl', 'slide-in-right'];
+            classNames.push(typeColorMap[type].color);
+            return Array.from(new Set(classNames)).join(" ")
+        }
+        return (
             <div className={getStyleClasses()}>
                 <div className={`border-b font-bold border-b-white p-3 flex 
                 justify-between`}>
-                    <span>{(config.type ?? 'Info').toLocaleUpperCase()}</span>
-                    {(config?.closeIcon ?? true) && <span className={"cursor-pointer"} onClick={removeNotification}>&#x2715;</span>}
+                    <span>{(title).toLocaleUpperCase()}</span>
+                    {(config?.closeIcon ?? true) && <span className={"cursor-pointer"}
+                        onClick={() => removeNotification(config?.placement ?? 'top-right', notificationId)}>&#x2715;</span>}
                 </div>
-                <div className={'p-3'}>{message}</div>
+                <div className={'p-3'}>
+                    <span>{message}</span>
+                    {autoClose && <div className="w-full my-2 bg-gray-300 border border-gray-400 rounded-full">
+                        <div className={`h-2 rounded-full ${typeColorMap[type].progressBar}`}
+                            style={{
+                                width: `${progressWidth}%`, transition: `width ${duration / 1000 / 100}s ease`
+                            }}></div>
+                    </div>}
+                </div>
+
             </div>
-        </div>)
-}
+        )
+    };

@@ -7,11 +7,51 @@ import { NotificationConfig, notifyMessage } from './commons/notifyMessage';
 function App() {
   const config: NotificationConfig = {
     closeIcon: true,
-    duration: 10,
-    placement: 'bottom-right',
-    type: 'error'
+    duration: 100,
+    placement: 'top-left',
+    type: 'success',
+    title: 'SUCCESS'
   }
-  return <div className={"w-3/6 mx-auto border my-2 border-black p-4"}>
+  const config2: NotificationConfig = {
+    closeIcon: true,
+    duration: 100,
+    placement: 'bottom-right',
+    type: 'error',
+    title: 'Message'
+  }
+  const config3: NotificationConfig = {
+    closeIcon: true,
+    duration: 100,
+    placement: 'bottom-left',
+    type: 'info',
+    title: 'This is Information title'
+  }
+  const config4: NotificationConfig = {
+    closeIcon: true,
+    duration: 100,
+    placement: 'top-right',
+    type: 'warning',
+    title: 'Warning'
+  }
+  const config5: NotificationConfig = {
+    closeIcon: true,
+    duration: 100,
+    placement: 'center',
+    type: 'default'
+  }
+  const config6: NotificationConfig = {
+    closeIcon: true,
+    duration: 100,
+    placement: 'top-center',
+    type: 'default'
+  }
+  const config7: NotificationConfig = {
+    closeIcon: true,
+    duration: 100,
+    placement: 'bottom-center',
+    type: 'default'
+  }
+  return <div className={"w-1/2 mx-auto border my-2 border-black p-4"}>
     {/* <InputField label={"Default field"} onChange={(e) => alert(`value - ${e.target.value}`)} />
     <InputField
       label={<>
@@ -66,14 +106,26 @@ function App() {
       <Button variant='warning' size='large' isOutline>Warning</Button>
       <Button variant='primary' size='large' isOutline>Primary</Button>
     </div> */}
-    <div>
-    <Button variant='success' size='large' 
-    onClick={() => notifyMessage("Hello, this is a message for Pramod for the success of the component", config)}>Success</Button>
+    <div className="mb-4 flex gap-2 flex-wrap">
+
+      <Button variant='success' size='large'
+        onClick={() => notifyMessage("Hello, this is a message for Pramod for the success of the component - " + new Date(), config)}>Success</Button>
+      <Button variant='error' size='large'
+        onClick={() => notifyMessage("Hello, this is a message for Pramod's 2nd for the error of the component - " + new Date(), config2)}>Error</Button>
+    <Button variant='primary' size='large'
+        onClick={() => notifyMessage("Hello, this is a message for Pramod's 2nd for the info of the component - " + new Date(), config3)}>Info</Button>
+    <Button variant='warning' size='large'
+        onClick={() => notifyMessage("Hello, this is a message for Pramod's 2nd for the warning of the component - " + new Date(), config4)}>Warning</Button>
+    <Button variant='secondary' size='large'
+        onClick={() => notifyMessage("Hello, this is a message for Pramod's 2nd for the default of the component - " + new Date(), config5)}>Secondary</Button>
+        <Button variant='success' size='large'
+        onClick={() => notifyMessage("Hello, this is a message for Pramod's 2nd for the top-center of the component - " + new Date(), config6)}>top-center</Button>
+    <Button variant='primary' size='large'
+        onClick={() => notifyMessage("Hello, this is a message for Pramod's 2nd for the bottom-center of the component - " + new Date(), config7)}>bottom-center</Button>
+    
     </div>
+    
   </div>
 }
 
 export default App;
-
-
-{/*  */ }
