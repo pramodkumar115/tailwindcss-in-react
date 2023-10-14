@@ -109,22 +109,25 @@ function App() {
     <div className="mb-4 flex gap-2 flex-wrap">
 
       <Button variant='success' size='large'
-        onClick={() => notifyMessage("Hello, this is a message for Pramod for the success of the component - " + new Date(), config)}>Success</Button>
+        onClick={() => notifyMessage(`Hello, this is a message for Pramod for 
+        the success of the component - ${new Date()}`, config)}>
+        Success
+      </Button>
       <Button variant='error' size='large'
         onClick={() => notifyMessage("Hello, this is a message for Pramod's 2nd for the error of the component - " + new Date(), config2)}>Error</Button>
-    <Button variant='primary' size='large'
+      <Button variant='primary' size='large'
         onClick={() => notifyMessage("Hello, this is a message for Pramod's 2nd for the info of the component - " + new Date(), config3)}>Info</Button>
-    <Button variant='warning' size='large'
+      <Button variant='warning' size='large'
         onClick={() => notifyMessage("Hello, this is a message for Pramod's 2nd for the warning of the component - " + new Date(), config4)}>Warning</Button>
-    <Button variant='secondary' size='large'
+      <Button variant='secondary' size='large'
         onClick={() => notifyMessage("Hello, this is a message for Pramod's 2nd for the default of the component - " + new Date(), config5)}>Secondary</Button>
-        <Button variant='success' size='large'
+      <Button variant='success' size='large'
         onClick={() => notifyMessage("Hello, this is a message for Pramod's 2nd for the top-center of the component - " + new Date(), config6)}>top-center</Button>
-    <Button variant='primary' size='large'
+      <Button variant='primary' size='large'
         onClick={() => notifyMessage("Hello, this is a message for Pramod's 2nd for the bottom-center of the component - " + new Date(), config7)}>bottom-center</Button>
-    
+
     </div>
-    
+
   </div>
 }
 
