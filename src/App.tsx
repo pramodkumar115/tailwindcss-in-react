@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './App.css'
 import Button from './commons/Button';
 import InputField from './commons/InputField';
 import { NotificationConfig, notifyMessage } from './commons/notifyMessage';
+import Modal from './Modal';
 
 function App() {
+  const [showPopup, setShowPopup] = useState(false);
+
   const config: NotificationConfig = {
     closeIcon: true,
     duration: 100,
@@ -126,7 +129,28 @@ function App() {
       <Button variant='primary' size='large'
         onClick={() => notifyMessage("Hello, this is a message for Pramod's 2nd for the bottom-center of the component - " + new Date(), config7)}>bottom-center</Button>
 
+<button className={`bg-orange-700 
+          p-2 text-white rounded 
+          hover:bg-orange-500`}
+          onClick={() => setShowPopup(true)}
+          >
+            Open Popup
+          </button>
+
     </div>
+
+    <Modal show={showPopup} size={'sm'}>
+          <Modal.Header>This is Header</Modal.Header>
+          <Modal.Content>Testing</Modal.Content>
+          <Modal.Footer>
+          <button className={`bg-blue-700 p-2 text-white 
+          rounded hover:bg-blue-500`}>OK</button>
+          <button
+            className="bg-red-700 p-2 
+          text-white rounded 
+          hover:bg-red-500" onClick={() => setShowPopup(false)}>Cancel</button>
+          </Modal.Footer>
+      </Modal>
 
   </div>
 }
